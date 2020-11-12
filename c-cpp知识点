@@ -16,3 +16,68 @@ c、c++程序员面试宝典中，说道的不宜使用内联函数的情况：1
 --------
 我认为c c++面试宝典的作者的意思是函数体内出现循环或者执行逻辑比较长，执行函数体时间要远大于函数调用的开销，可以忽略函数调用华为的时间，把内存开销作为首要考虑点，所以这种情况不适合用内联。
 
+2、内存中的数据对齐
+在默认情况下，为了方便对结构体内元素的访问和管理，当结构
+体内的元素的长度都小于处理器的位数的时候，便以结构体里面最长的数据元素为对齐单
+位，也就是说，结构体的长度一定是最长的数据元素的整数倍。如果结构体内存在长度大于
+处理器位数的元素，那么就以处理器的位数为对齐单位。但是结构体内类型相同的连续元素
+将在连续的空间内，和数组一样。
+
+本人机器64位的，8字节。测试如下结构体：
+struct B {
+    char a;
+    char b;
+    char c;
+};//size 为3
+
+struct B {
+    short a;
+    short b;
+    short c;
+};//size 为6
+
+struct B {
+    short a;
+    char e;
+;
+
+};//size 为4
+
+struct B {
+    short a;
+    short b;
+    short c;
+    char e;
+    char f;
+    char g;
+
+};//size 为10
+
+struct B {
+/*    short a;
+    short b;
+    short c;
+    char e;
+    char f;
+    char g;*/
+
+    long a;
+    int b;
+    char c;
+
+};//size 为16
+
+struct B {
+/*    short a;
+    short b;
+    short c;
+    char e;
+    char f;
+    char g;*/
+
+    short a;
+    int  b;
+    char c;
+
+};//size 为12
+
