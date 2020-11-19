@@ -1,0 +1,48 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<int> rightSideView(TreeNode* root) {
+        vector<int> ret;
+        if (root == NULL)
+            return ret;
+
+        vector<int> level;
+
+        queue<TreeNode *> q;
+        q.push(root);//根节点入队
+        q.push(NULL);//添加第一层和第二层的分界
+
+        while (!q.empty())
+        //if (!q.empty())//真粗心
+        {
+            TreeNode *temp = q.front();//出队
+            q.pop();
+
+            if (temp != NULL)//打印本层节点，并且左右子节点入队，即下层节点入队
+            {
+                level.push_back(temp->val);
+                if (temp->left != NULL)
+                    q.push(temp->left);
+                if (temp->right != NULL)
+                    q.push(temp->right);
+            } else {//一层已经遍历结束，本层已经全部出队，换种说法就是下一层所有节点恰好全部入队，此时刚好加入分界
+                ret.push_back(level[level.size() - 1]);
+                if(!q.empty())
+                {
+                    level.clear();//清空每一层的节点，以便存放下一层节点
+                    q.push(NULL);//添加分界
+                }
+            }
+        }
+
+        return ret;
+    }
+};
